@@ -1,0 +1,31 @@
+# Database
+.env
+.env.local
+.env.production
+
+# Dependencies
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Next.js
+.next/
+out/
+
+# Production
+/build
+
+# Misc
+.DS_Store
+*.tsbuildinfo
+
+# Prisma
+prisma/migrations/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db

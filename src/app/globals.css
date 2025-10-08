@@ -1,0 +1,159 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --background-secondary: 210 20% 98%;
+    --foreground: 224 71.4% 4.1%;
+    --foreground-secondary: 215.4 16.3% 46.9%;
+    
+    --accent: 172 66% 50%;
+    --accent-foreground: 210 40% 98%;
+    --accent-hover: 172 66% 45%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 224 71.4% 4.1%;
+    --card-hover: 210 20% 98%;
+    
+    --border: 220 13% 91%;
+    --border-active: 172 66% 50%;
+    
+    --input: 220 13% 91%;
+    --input-focus: 172 66% 50%;
+    
+    --success: 142 76% 36%;
+    --success-foreground: 210 40% 98%;
+    
+    --error: 0 84.2% 60.2%;
+    --error-foreground: 210 40% 98%;
+  }
+
+  .dark {
+    --background: 224 71.4% 4.1%;
+    --background-secondary: 215 27.9% 8.9%;
+    --foreground: 210 40% 98%;
+    --foreground-secondary: 215 20.2% 65.1%;
+    
+    --accent: 172 66% 50%;
+    --accent-foreground: 210 40% 98%;
+    --accent-hover: 172 66% 45%;
+    
+    --card: 215 27.9% 8.9%;
+    --card-foreground: 210 40% 98%;
+    --card-hover: 215 27.9% 11.9%;
+    
+    --border: 215 27.9% 16.9%;
+    --border-active: 172 66% 50%;
+    
+    --input: 215 27.9% 16.9%;
+    --input-focus: 172 66% 50%;
+    
+    --success: 142 76% 36%;
+    --success-foreground: 210 40% 98%;
+    
+    --error: 0 84.2% 60.2%;
+    --error-foreground: 210 40% 98%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Custom Animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-5px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(5px);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
+.animate-slide-down {
+  animation: slide-down 0.3s ease-out;
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-out;
+}
+
+/* Smooth transitions */
+input, textarea, select, button {
+  transition: all 0.2s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: hsl(var(--accent));
+  box-shadow: 0 0 0 3px hsla(var(--accent), 0.1);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--background));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--accent));
+}

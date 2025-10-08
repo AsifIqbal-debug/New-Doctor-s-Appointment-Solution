@@ -1,0 +1,174 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  role         Role
+  name         String
+  email        String   @unique
+  phone        String?  @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  Doctor       Doctor?
+  Patient      Patient?
+}
+
+model Doctor {
+  id                 String               @id @default(cuid())
+  userId             String               @unique
+  specialty          String?
+  qualification      String?
+  experienceYears    Int?
+  feeBdt             Int                  @default(500)
+  bio                String?
+  imageUrl           String?              // Doctor profile image
+  roomNo             String?
+  defaultSlotMinutes Int                  @default(15)
+  priceRuleSetId     String?
+  appointments       Appointment[]
+  priceRuleSet       PriceRuleSet?        @relation(fields: [priceRuleSetId], references: [id])
+  user               User                 @relation(fields: [userId], references: [id])
+  availabilities     DoctorAvailability[]
+  dayOffs            DoctorDayOff[]
+  prescriptions      Prescription[]
+}
+
+model Patient {
+  id           String        @id @default(cuid())
+  userId       String        @unique
+  dob          DateTime?
+  gender       String?
+  notes        String?
+  appointments Appointment[]
+  user         User          @relation(fields: [userId], references: [id])
+}
+
+model DoctorAvailability {
+  id        String  @id @default(cuid())
+  doctorId  String
+  weekday   Int
+  startTime String
+  endTime   String
+  isActive  Boolean @default(true)
+  doctor    Doctor  @relation(fields: [doctorId], references: [id])
+}
+
+model DoctorDayOff {
+  id       String   @id @default(cuid())
+  doctorId String
+  date     DateTime
+  reason   String?
+  doctor   Doctor   @relation(fields: [doctorId], references: [id])
+
+  @@unique([doctorId, date])
+}
+
+model Appointment {
+  id            String            @id @default(cuid())
+  doctorId      String
+  patientId     String
+  startsAt      DateTime
+  endsAt        DateTime
+  status        AppointmentStatus @default(BOOKED)
+  feeBdt        Int
+  feeRule       String
+  paidAmountBdt Int               @default(0)
+  createdBy     String
+  createdAt     DateTime          @default(now())
+  doctor        Doctor            @relation(fields: [doctorId], references: [id])
+  patient       Patient           @relation(fields: [patientId], references: [id])
+  payments      Payment[]
+  prescription  Prescription?
+  testOrders    TestOrder[]
+  visit         Visit?
+
+  @@unique([doctorId, startsAt])
+  @@index([doctorId, startsAt])
+}
+
+model Visit {
+  id            String      @id @default(cuid())
+  appointmentId String      @unique
+  visitDate     DateTime    @default(now())
+  vitalsJson    Json?
+  notes         String?
+  appointment   Appointment @relation(fields: [appointmentId], references: [id])
+}
+
+model Prescription {
+  id            String      @id @default(cuid())
+  appointmentId String      @unique
+  doctorId      String
+  patientId     String
+  itemsJson     Json
+  advice        String?
+  attachmentUrl String?
+  appointment   Appointment @relation(fields: [appointmentId], references: [id])
+  doctor        Doctor      @relation(fields: [doctorId], references: [id])
+}
+
+model TestOrder {
+  id                String      @id @default(cuid())
+  appointmentId     String
+  type              String
+  notes             String?
+  uploadedResultUrl String?
+  uploadedByAdminId String?
+  uploadedAt        DateTime?
+  appointment       Appointment @relation(fields: [appointmentId], references: [id])
+
+  @@index([appointmentId])
+}
+
+model Payment {
+  id                String      @id @default(cuid())
+  appointmentId     String
+  method            String
+  amountBdt         Int
+  receivedByAdminId String
+  receivedAt        DateTime    @default(now())
+  appointment       Appointment @relation(fields: [appointmentId], references: [id])
+}
+
+model PriceRuleSet {
+  id        String   @id @default(cuid())
+  name      String
+  currency  String   @default("BDT")
+  rulesJson Json
+  doctors   Doctor[]
+}
+
+model BoardCard {
+  id        String   @id @default(cuid())
+  type      String   // 'notice', 'branding', 'doctor', 'announcement'
+  title     String
+  content   String
+  imageUrl  String?
+  icon      String?
+  link      String?
+  color     String?  // Gradient color classes
+  isActive  Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Role {
+  PATIENT
+  DOCTOR
+  ADMIN
+}
+
+enum AppointmentStatus {
+  BOOKED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
