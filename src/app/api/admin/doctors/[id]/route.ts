@@ -5,7 +5,7 @@ import { prisma } from '@/lib/db'
 // DELETE /api/admin/doctors/[id] - Remove doctor
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await getAuthUser(req)
@@ -17,6 +17,7 @@ export async function DELETE(
       )
     }
 
+    const params = await context.params
     const doctorId = params.id
 
     // Check if doctor exists
@@ -100,7 +101,7 @@ export async function DELETE(
 // PUT /api/admin/doctors/[id] - Update doctor
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const user = await getAuthUser(req)
@@ -112,6 +113,7 @@ export async function PUT(
       )
     }
 
+    const params = await context.params
     const doctorId = params.id
     const body = await req.json()
     const { name, specialty, qualification, experienceYears, feeBdt } = body
