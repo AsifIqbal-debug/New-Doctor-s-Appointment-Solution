@@ -1,5 +1,15 @@
 # Vercel Deployment Guide
 
+## ⚠️ Important: Force New Deployment
+
+**If Vercel is deploying an old commit:**
+1. Go to Vercel Dashboard → Your Project
+2. Go to "Deployments" tab
+3. Find the latest commit from GitHub
+4. Click "..." menu → "Redeploy"
+5. OR: Go to Settings → Git → "Redeploy" button
+6. This forces Vercel to pull the latest code from GitHub
+
 ## 📦 Deployment Steps
 
 ### Prerequisites
