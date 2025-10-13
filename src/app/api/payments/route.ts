@@ -20,10 +20,7 @@ export async function POST(request: NextRequest) {
     const { 
       appointmentId, 
       amount, 
-      paymentMethod, 
-      transactionId, 
-      notes, 
-      status = 'COMPLETED' 
+      paymentMethod
     } = await request.json()
 
     // Validate required fields

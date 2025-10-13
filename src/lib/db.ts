@@ -4,21 +4,6 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
 }
 
-// Database connection helper to handle hibernation
-async function connectWithRetry(prismaClient: PrismaClient, retries = 3): Promise<void> {
-  for (let i = 0; i < retries; i++) {
-    try {
-      await prismaClient.$connect()
-      return
-    } catch (error) {
-      console.log(`Database connection attempt ${i + 1} failed:`, error)
-      if (i === retries - 1) throw error
-      // Wait before retrying (exponential backoff)
-      await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000))
-    }
-  }
-}
-
 export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
@@ -43,7 +28,7 @@ export async function ensureConnection() {
     // Ping the database to wake it up if hibernating
     await prisma.$queryRaw`SELECT 1`
     return true
-  } catch (error) {
+  } catch {
     console.log('Database connection lost, reconnecting...')
     try {
       await prisma.$disconnect()

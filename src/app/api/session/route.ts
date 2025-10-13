@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
       user: user
     })
 
-  } catch (error) {
+  } catch {
     // Invalid token
     const response = NextResponse.json({ user: null })
     

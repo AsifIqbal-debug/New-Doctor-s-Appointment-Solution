@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react'
 import { useDoctors } from '@/hooks/useDoctors'
 import DoctorCard from '@/components/DoctorCard'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { CategoryFilter, specialtyCategories } from '@/components/category-filter'
 import BoardSwiper from '@/components/BoardSwiper'
 

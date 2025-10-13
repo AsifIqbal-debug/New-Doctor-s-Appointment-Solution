@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 
 // GET /api/board-cards - Public endpoint to get active board cards
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const cards = await prisma.boardCard.findMany({
       where: {

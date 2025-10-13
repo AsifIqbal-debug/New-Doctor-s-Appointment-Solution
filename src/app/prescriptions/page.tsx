@@ -4,28 +4,7 @@ import { useEffect } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { usePrescriptions } from '@/hooks/usePrescriptions'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import FrequencyDisplay from '@/components/FrequencyDisplay'
 import PrescriptionHistory from '@/components/PrescriptionHistory'
-
-interface Prescription {
-  id: string
-  appointmentId: string
-  doctorId: string
-  patientId: string
-  itemsJson: any
-  advice?: string
-  attachmentUrl?: string
-  appointment: {
-    startsAt: string
-    doctor: {
-      user: {
-        name: string
-      }
-      specialty: string
-    }
-  }
-}
 
 export default function PrescriptionsPage() {
   const { user, loading } = useAuth()
@@ -40,21 +19,6 @@ export default function PrescriptionsPage() {
       return
     }
   }, [user, loading, router])
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })
-  }
-
-  const formatTime = (dateString: string) => {
-    return new Date(dateString).toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit'
-    })
-  }
 
   if (loading || isLoading) {
     return (

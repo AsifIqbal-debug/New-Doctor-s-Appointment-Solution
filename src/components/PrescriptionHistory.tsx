@@ -43,6 +43,7 @@ interface PrescriptionHistoryProps {
 }
 
 export default function PrescriptionHistory({ prescriptions, userRole = 'PATIENT' }: PrescriptionHistoryProps) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectedPrescription, setSelectedPrescription] = useState<Prescription | null>(null)
   const [expandedId, setExpandedId] = useState<string | null>(null)
 

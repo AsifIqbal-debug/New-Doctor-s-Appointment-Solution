@@ -36,6 +36,7 @@ const COLOR_OPTIONS = [
 ];
 
 export default function BoardCardsAdminPage() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const router = useRouter();
   const [cards, setCards] = useState<BoardCard[]>([]);
   const [loading, setLoading] = useState(true);

@@ -35,9 +35,11 @@ export default function DoctorAppointmentsPage() {
   const router = useRouter()
   const { data: appointments = [], isLoading, error } = useAppointments()
   const queryClient = useQueryClient()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [updatingAppointment, setUpdatingAppointment] = useState<string | null>(null)
 
   // Mutation to update appointment status
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const updateAppointmentStatus = useMutation({
     mutationFn: async ({ appointmentId, status }: { appointmentId: string; status: string }) => {
       const token = localStorage.getItem('auth-token')

@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { apiPost } from '@/lib/api'
 
 interface BookAppointmentData {
   doctorId: string

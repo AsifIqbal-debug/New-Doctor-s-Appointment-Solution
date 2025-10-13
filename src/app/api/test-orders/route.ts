@@ -21,8 +21,7 @@ export async function POST(request: NextRequest) {
       appointmentId, 
       tests, 
       instructions, 
-      urgency = 'ROUTINE',
-      totalAmount
+      urgency = 'ROUTINE'
     } = await request.json()
 
     // Validate required fields
