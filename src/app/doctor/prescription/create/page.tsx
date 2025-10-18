@@ -37,7 +37,16 @@ function CreatePrescriptionForm() {
   const appointmentId = searchParams.get('appointmentId')
   
   const [medications, setMedications] = useState<MedicationItem[]>([
-    { name: '', dosage: '', frequency: '', duration: '', instructions: '' }
+    { 
+      name: '', 
+      dosage: '', 
+      frequency: '', 
+      duration: '', 
+      instructions: '',
+      genericName: '',
+      form: '',
+      manufacturer: ''
+    }
   ])
   const [advice, setAdvice] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -163,7 +172,16 @@ function CreatePrescriptionForm() {
   })
 
   const addMedication = () => {
-    setMedications([...medications, { name: '', dosage: '', frequency: '', duration: '', instructions: '' }])
+    setMedications([...medications, { 
+      name: '', 
+      dosage: '', 
+      frequency: '', 
+      duration: '', 
+      instructions: '',
+      genericName: '',
+      form: '',
+      manufacturer: ''
+    }])
   }
 
   const removeMedication = (index: number) => {
@@ -177,6 +195,8 @@ function CreatePrescriptionForm() {
       i === index ? { ...med, [field]: value } : med
     )
     setMedications(updated)
+    console.log(`✏️ Updated medication ${index}, field: ${field}, value:`, value)
+    console.log('📋 All medications:', updated)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -321,6 +341,8 @@ function CreatePrescriptionForm() {
                         </label>
                         <MedicineAutocomplete
                           onSelect={(medicine: Medicine) => {
+                            console.log('💊 Medicine selected:', medicine)
+                            console.log('📝 Updating medication at index:', index)
                             updateMedication(index, 'name', `${medicine.name} ${medicine.strength}`)
                             updateMedication(index, 'dosage', medicine.strength)
                             updateMedication(index, 'genericName', medicine.genericName)
