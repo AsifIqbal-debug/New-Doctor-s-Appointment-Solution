@@ -41,6 +41,8 @@ export default function MedicineAutocomplete({
       return
     }
 
+    console.log('🔍 MedicineAutocomplete: Searching for:', query)
+
     // Clear previous timeout
     if (debounceRef.current) {
       clearTimeout(debounceRef.current)
@@ -50,15 +52,22 @@ export default function MedicineAutocomplete({
     debounceRef.current = setTimeout(async () => {
       setIsLoading(true)
       try {
-        const response = await fetch(`/api/medicines/search?q=${encodeURIComponent(query)}`)
+        const url = `/api/medicines/search?q=${encodeURIComponent(query)}`
+        console.log('🌐 Fetching:', url)
+        const response = await fetch(url)
+        console.log('📡 Response status:', response.status)
+        
         if (response.ok) {
           const data = await response.json()
+          console.log('✅ Medicines found:', data.length, data)
           setMedicines(data)
           setIsOpen(data.length > 0)
           setSelectedIndex(-1)
+        } else {
+          console.error('❌ Response not OK:', response.status)
         }
       } catch (error) {
-        console.error('Failed to search medicines:', error)
+        console.error('❌ Failed to search medicines:', error)
         setMedicines([])
       } finally {
         setIsLoading(false)
