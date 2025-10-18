@@ -5,6 +5,17 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import FrequencyInput from '@/components/FrequencyInput'
+import MedicineAutocomplete from '@/components/MedicineAutocomplete'
+
+interface Medicine {
+  id: string
+  name: string
+  genericName: string
+  strength: string
+  form: string
+  manufacturer: string
+  price: number | null
+}
 
 interface MedicationItem {
   name: string
@@ -12,6 +23,10 @@ interface MedicationItem {
   frequency: string
   duration: string
   instructions: string
+  // Optional fields from autocomplete
+  genericName?: string
+  form?: string
+  manufacturer?: string
 }
 
 function CreatePrescriptionForm() {
@@ -299,47 +314,63 @@ function CreatePrescriptionForm() {
                       )}
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 gap-4">
                       <div>
-                        <label className="block text-sm font-medium mb-1" style={{color: 'var(--foreground)'}}>
-                          Medicine Name *
+                        <label className="block text-sm font-medium mb-2" style={{color: 'var(--foreground)'}}>
+                          Search Medicine *
                         </label>
-                        <input
-                          type="text"
-                          value={medication.name}
-                          onChange={(e) => updateMedication(index, 'name', e.target.value)}
-                          className="w-full px-3 py-2 border rounded-lg"
-                          style={{
-                            backgroundColor: 'var(--background)',
-                            borderColor: 'var(--border)',
-                            color: 'var(--foreground)'
+                        <MedicineAutocomplete
+                          onSelect={(medicine: Medicine) => {
+                            updateMedication(index, 'name', `${medicine.name} ${medicine.strength}`)
+                            updateMedication(index, 'dosage', medicine.strength)
+                            updateMedication(index, 'genericName', medicine.genericName)
+                            updateMedication(index, 'form', medicine.form)
+                            updateMedication(index, 'manufacturer', medicine.manufacturer)
                           }}
-                          placeholder="e.g., Paracetamol"
-                          required
                         />
                       </div>
                       
+                      {medication.name && (
+                        <div className="p-3 bg-teal-50 dark:bg-teal-900/20 rounded-lg border border-teal-200 dark:border-teal-800">
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="flex-1">
+                              <p className="font-semibold text-teal-900 dark:text-teal-100">
+                                {medication.name}
+                              </p>
+                              {medication.genericName && (
+                                <p className="text-sm text-teal-700 dark:text-teal-300">
+                                  Generic: {medication.genericName}
+                                </p>
+                              )}
+                              {medication.form && (
+                                <p className="text-xs text-teal-600 dark:text-teal-400">
+                                  Form: {medication.form}
+                                  {medication.manufacturer && ` • ${medication.manufacturer}`}
+                                </p>
+                              )}
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                updateMedication(index, 'name', '')
+                                updateMedication(index, 'dosage', '')
+                                updateMedication(index, 'genericName', '')
+                                updateMedication(index, 'form', '')
+                                updateMedication(index, 'manufacturer', '')
+                              }}
+                              className="text-teal-600 hover:text-teal-700 dark:text-teal-400 dark:hover:text-teal-300 text-sm underline"
+                            >
+                              Change
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
                       <div>
                         <label className="block text-sm font-medium mb-1" style={{color: 'var(--foreground)'}}>
-                          Dosage
-                        </label>
-                        <input
-                          type="text"
-                          value={medication.dosage}
-                          onChange={(e) => updateMedication(index, 'dosage', e.target.value)}
-                          className="w-full px-3 py-2 border rounded-lg"
-                          style={{
-                            backgroundColor: 'var(--background)',
-                            borderColor: 'var(--border)',
-                            color: 'var(--foreground)'
-                          }}
-                          placeholder="e.g., 500mg"
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium mb-1" style={{color: 'var(--foreground)'}}>
-                          Frequency
+                          Frequency *
                         </label>
                         <FrequencyInput
                           value={medication.frequency}

@@ -160,6 +160,23 @@ model BoardCard {
   updatedAt DateTime @updatedAt
 }
 
+model Medicine {
+  id           String   @id @default(cuid())
+  name         String   // Brand name (e.g., "Napa")
+  genericName  String   // Generic name (e.g., "Paracetamol")
+  strength     String   // Dosage strength (e.g., "500mg", "100mg/5ml")
+  form         String   // Dosage form (e.g., "Tablet", "Syrup", "Capsule")
+  manufacturer String   // Company name (e.g., "Beximco", "Square")
+  price        Float?   // Price in BDT
+  description  String?  // Additional info
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([name])
+  @@index([genericName])
+}
+
 enum Role {
   PATIENT
   DOCTOR
