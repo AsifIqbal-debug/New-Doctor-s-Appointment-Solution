@@ -51,6 +51,11 @@ function CreatePrescriptionForm() {
   const [advice, setAdvice] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  // Debug: Watch medications state changes
+  useEffect(() => {
+    console.log('🔄 Medications state changed:', medications)
+  }, [medications])
+
   useEffect(() => {
     if (loading) return
     
@@ -191,12 +196,15 @@ function CreatePrescriptionForm() {
   }
 
   const updateMedication = (index: number, field: keyof MedicationItem, value: string) => {
-    const updated = medications.map((med, i) => 
-      i === index ? { ...med, [field]: value } : med
-    )
-    setMedications(updated)
-    console.log(`✏️ Updated medication ${index}, field: ${field}, value:`, value)
-    console.log('📋 All medications:', updated)
+    setMedications(prevMedications => {
+      const updated = prevMedications.map((med, i) => 
+        i === index ? { ...med, [field]: value } : med
+      )
+      console.log(`✏️ Updated medication ${index}, field: ${field}, value:`, value)
+      console.log('📋 Medication at index:', updated[index])
+      console.log('📋 All medications:', updated)
+      return updated
+    })
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -318,10 +326,10 @@ function CreatePrescriptionForm() {
 
               <div className="space-y-4">
                 {medications.map((medication, index) => (
-                  <div key={index} className="p-4 border rounded-lg" style={{borderColor: 'var(--border)'}}>
+                  <div key={`medication-${index}-${medication.name}`} className="p-4 border rounded-lg" style={{borderColor: 'var(--border)'}}>
                     <div className="flex justify-between items-center mb-3">
                       <h3 className="font-medium" style={{color: 'var(--foreground)'}}>
-                        Medication {index + 1}
+                        Medication {index + 1} {medication.name && `- ${medication.name}`}
                       </h3>
                       {medications.length > 1 && (
                         <button
@@ -352,22 +360,29 @@ function CreatePrescriptionForm() {
                         />
                       </div>
                       
-                      {medication.name && (
+                      {/* Debug: Show raw state */}
+                      <div className="mb-2 p-2 bg-gray-100 dark:bg-gray-800 rounded text-xs">
+                        <strong>Debug State:</strong> name={medication.name || 'EMPTY'}, 
+                        generic={medication.genericName || 'EMPTY'}, 
+                        form={medication.form || 'EMPTY'}
+                      </div>
+
+                      {medication.name && medication.name.trim() !== '' ? (
                         <div className="p-3 bg-teal-50 dark:bg-teal-900/20 rounded-lg border border-teal-200 dark:border-teal-800">
                           <div className="flex items-start justify-between gap-3">
                             <div className="flex-1">
                               <p className="font-semibold text-teal-900 dark:text-teal-100">
                                 {medication.name}
                               </p>
-                              {medication.genericName && (
+                              {medication.genericName && medication.genericName.trim() !== '' && (
                                 <p className="text-sm text-teal-700 dark:text-teal-300">
                                   Generic: {medication.genericName}
                                 </p>
                               )}
-                              {medication.form && (
+                              {medication.form && medication.form.trim() !== '' && (
                                 <p className="text-xs text-teal-600 dark:text-teal-400">
                                   Form: {medication.form}
-                                  {medication.manufacturer && ` • ${medication.manufacturer}`}
+                                  {medication.manufacturer && medication.manufacturer.trim() !== '' && ` • ${medication.manufacturer}`}
                                 </p>
                               )}
                             </div>
@@ -385,6 +400,12 @@ function CreatePrescriptionForm() {
                               Change
                             </button>
                           </div>
+                        </div>
+                      ) : (
+                        <div className="p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg border border-gray-200 dark:border-gray-700">
+                          <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
+                            👆 Search and select a medicine above
+                          </p>
                         </div>
                       )}
                     </div>
